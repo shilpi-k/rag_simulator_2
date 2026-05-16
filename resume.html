@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shilpi — Senior Product Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0b1120;
+    --border: rgba(99,179,237,0.12);
+    --teal: #2dd4bf;
+    --teal-dim: rgba(45,212,191,0.15);
+    --teal-glow: rgba(45,212,191,0.4);
+    --blue: #63b3ed;
+    --blue-dim: rgba(99,179,237,0.1);
+    --text-primary: #f0f4ff;
+    --text-secondary: #8ba3c7;
+    --text-muted: #4a6080;
+    --accent: #f6c90e;
+    --accent-dim: rgba(246,201,14,0.1);
+    --grid: rgba(99,179,237,0.04);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ambient glow */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(45,212,191,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.7s ease forwards 0.1s;
+  }
+
+  .header-left {}
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  h1 span {
+    color: var(--teal);
+    font-style: italic;
+    font-family: 'Instrument Serif', serif;
+  }
+
+  .title-line {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    margin-top: 14px;
+  }
+
+  .header-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
+  .contact-item {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .contact-item .dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+
+  .yoe-counter {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    background: var(--teal-dim);
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .yoe-counter .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--teal);
+    line-height: 1;
+    display: block;
+  }
+
+  .yoe-counter .label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* ── SECTION LAYOUT ── */
+  .section {
+    margin-bottom: 44px;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .section.visible {
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── SUMMARY ── */
+  .summary-box {
+    border-left: 2px solid var(--teal);
+    padding: 16px 20px;
+    background: var(--blue-dim);
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  .summary-box strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+
+  .skill-tag {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-tag::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--teal-dim);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+
+  .skill-tag:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .skill-tag:hover::before { transform: scaleX(1); }
+
+  .skill-tag span { position: relative; z-index: 1; }
+
+  .skill-tag.highlight {
+    border-color: rgba(246,201,14,0.3);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .exp-item:last-child { border-bottom: none; }
+
+  .exp-meta {}
+
+  .exp-company {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .exp-period {
+    font-size: 10px;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .exp-client {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .exp-content {}
+
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .exp-bullets li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.65;
+  }
+
+  .exp-bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  .metric {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .project-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 18px;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--blue));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+  }
+
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+
+  .project-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .stack-tag {
+    font-size: 9px;
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── METRICS ROW ── */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 44px;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .metrics-row.visible {
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .metric-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 16px;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+
+  .metric-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--teal);
+    line-height: 1;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .metric-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── EDUCATION ── */
+  .edu-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .edu-row:last-child { border-bottom: none; }
+
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .edu-school {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .edu-year {
+    font-size: 10px;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards 1.2s;
+  }
+
+  .footer-note {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SCAN LINE EFFECT ── */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal-glow), transparent);
+    animation: scan 4s linear infinite;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100vh; }
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body::before, body::after, .scanline { display: none; }
+    .section { opacity: 1; transform: none; animation: none; }
+    header { opacity: 1; transform: none; animation: none; }
+    .metrics-row { opacity: 1; transform: none; animation: none; }
+    footer { opacity: 1; animation: none; }
+    body { background: white; color: #111; }
+    :root { --bg: white; --text-primary: #111; --text-secondary: #444; --surface: #f8f8f8; --border: #ddd; }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 24px 16px 60px; }
+    header { grid-template-columns: 1fr; }
+    .header-right { text-align: left; align-items: flex-start; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        Open to Senior / Staff PM Roles
+      </div>
+      <h1>Shilpi<br><span>Sharma</span></h1>
+      <div class="title-line">Senior Product Manager · Healthcare Payor · AI/ML Delivery</div>
+    </div>
+    <div class="header-right">
+      <div class="contact-item"><span class="dot"></span>Phoenix, AZ</div>
+      <div class="contact-item"><span class="dot"></span>US Healthcare Payor</div>
+      <div class="contact-item"><span class="dot"></span>Available for $200K+ roles</div>
+      <div class="yoe-counter">
+        <span class="num" id="yoe">0</span>
+        <span class="label">Years Experience</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- METRICS -->
+  <div class="metrics-row section">
+    <div class="metric-card">
+      <span class="metric-num">80%</span>
+      <span class="metric-label">Provider Match Exception Reduction</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">20m</span>
+      <span class="metric-label">Claims Adjudication (was 2–3 hrs)</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">35%</span>
+      <span class="metric-label">Cost Reduction at UHC</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">50%</span>
+      <span class="metric-label">Denial Rework Reduction</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Profile</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="summary-box">
+      <strong>19 years</strong> in US healthcare payor — from batch development and solution analysis to leading <strong>$2M+ automation programs</strong> at Ascension. Deep expertise in Claims Adjudication, UM/Prior Auth, Provider Networks, and Member Enrollment. Delivered near-real-time claims processing, predictive denial engines, and AI-powered automation at scale. Currently building <strong>ClaimSync</strong> and <strong>BenefitBot</strong> as AI portfolio pieces. Formalizing PM craft through HelloPM. Targeting Senior/Staff PM roles in healthcare payor or payor-adjacent AI.
+    </div>
+  </div>
+
+  <!-- CORE SKILLS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Core Competencies</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-tag highlight"><span>Claims Adjudication</span></div>
+      <div class="skill-tag highlight"><span>UM / Prior Auth</span></div>
+      <div class="skill-tag highlight"><span>Provider Networks</span></div>
+      <div class="skill-tag highlight"><span>Member Enrollment</span></div>
+      <div class="skill-tag"><span>FHIR / Interop</span></div>
+      <div class="skill-tag"><span>AI/ML Delivery</span></div>
+      <div class="skill-tag"><span>Facets / QNXT</span></div>
+      <div class="skill-tag"><span>HealthRules</span></div>
+      <div class="skill-tag"><span>SQL</span></div>
+      <div class="skill-tag"><span>Product Roadmap</span></div>
+      <div class="skill-tag"><span>Agile / Scrum</span></div>
+      <div class="skill-tag"><span>Denial Management</span></div>
+      <div class="skill-tag"><span>Price Transparency</span></div>
+      <div class="skill-tag"><span>Vendor Management</span></div>
+      <div class="skill-tag"><span>HIPAA Compliance</span></div>
+      <div class="skill-tag"><span>Cross-functional Leadership</span></div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Experience</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Ascension</div>
+        <div class="exp-period">2023 — Present</div>
+        <div class="exp-client">Healthcare System</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Program Manager / Director PM</div>
+        <ul class="exp-bullets">
+          <li>Reduced provider match manual exceptions by <span class="metric">80%</span> — from 300 to 60 per day — through automation of identity matching logic</li>
+          <li>Reduced member identity manual review volume by <span class="metric">70%</span> via ML-assisted deduplication pipeline</li>
+          <li>Delivered net-new auth loading capability, enabling pre-service authorization workflows from scratch</li>
+          <li>Led <span class="metric">10-person engineering team</span> across a <span class="metric">$2M+</span> automation investment portfolio</li>
+          <li>Built executive dashboards for C-suite visibility into operational KPIs and automation ROI</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Cognizant</div>
+        <div class="exp-period">2007 — 2023</div>
+        <div class="exp-client">UHC (14 yrs) · CVS · AmeriChoice</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Senior Business Analyst → Solution Analyst → Program Manager</div>
+        <ul class="exp-bullets">
+          <li>Redesigned claims adjudication pipeline at UnitedHealthcare — reduced processing time from <span class="metric">2–3 hours to 20 minutes</span>, achieving <span class="metric">35% cost reduction</span></li>
+          <li>Built pre-service cost estimator enabling members to predict claim cost before service is rendered</li>
+          <li>Delivered predictive denial engine reducing rework by <span class="metric">50%</span> through upstream denial probability scoring</li>
+          <li>Led Agile transformation at CVS Caremark — accelerated releases from quarterly to monthly, improving feature throughput by <span class="metric">40%</span></li>
+          <li>Led CVS Caremark's successful exit from CMS sanction through process remediation and compliance delivery</li>
+          <li>Built and managed cross-functional teams across Claims, UM, Provider, and Member domains</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE PROJECTS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">AI Portfolio Projects</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-name">ClaimSync</div>
+        <div class="project-desc">Claims-to-auth match probability engine. Prototype of the exact automation implemented at scale — reducing 300 manual reviews/day to 25. Features a 3-stage waterfall matching engine with configurable rule settings.</div>
+        <div class="project-stack">
+          <span class="stack-tag">React</span>
+          <span class="stack-tag">Claude API</span>
+          <span class="stack-tag">SVG Viz</span>
+          <span class="stack-tag">Claims Logic</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-name">BenefitBot</div>
+        <div class="project-desc">Agentic member-facing AI benefits navigator for Medicare Advantage members. Reduces inbound call volume by enabling self-service benefit inquiry and prior auth status lookup.</div>
+        <div class="project-stack">
+          <span class="stack-tag">Claude API</span>
+          <span class="stack-tag">React</span>
+          <span class="stack-tag">Medicare Advantage</span>
+          <span class="stack-tag">CMS Compliance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARGET COMPANIES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Target Domains</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-tag highlight"><span>Healthcare Payor AI</span></div>
+      <div class="skill-tag"><span>Claims Automation</span></div>
+      <div class="skill-tag"><span>Prior Auth / UM</span></div>
+      <div class="skill-tag"><span>RCM Technology</span></div>
+      <div class="skill-tag"><span>Interoperability</span></div>
+      <div class="skill-tag"><span>Medicare Advantage</span></div>
+    </div>
+  </div>
+
+  <!-- EDUCATION & LEARNING -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Education & Development</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">HelloPM — Product Management Certification</div>
+        <div class="edu-school">Cohort 50 · Formalizing PM craft: discovery, PRD, roadmap, metrics</div>
+      </div>
+      <div class="edu-year">2024 — Present</div>
+    </div>
+    <div class="edu-row">
+      <div>
+        <div class="edu-degree">Bachelor of Engineering / Technology</div>
+        <div class="edu-school">Computer Science · India</div>
+      </div>
+      <div class="edu-year">Pre-2007</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-note">RESUME · SHILPI SHARMA · PHOENIX AZ · HEALTHCARE PAYOR PM</div>
+    <div class="footer-brand">19 YRS · $200K+</div>
+  </footer>
+
+</div>
+
+<script>
+  // Animate YOE counter
+  function animateCount(el, target, duration) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      el.textContent = Math.floor(start);
+    }, 16);
+  }
+
+  window.addEventListener('load', () => {
+    setTimeout(() => animateCount(document.getElementById('yoe'), 19, 1200), 600);
+  });
+
+  // Scroll-triggered section reveals
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${i * 0.08}s`;
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section').forEach(el => observer.observe(el));
+
+  // Skill tag hover sound effect (visual only — subtle border flash)
+  document.querySelectorAll('.skill-tag').forEach(tag => {
+    tag.addEventListener('mouseenter', () => {
+      tag.style.boxShadow = '0 0 12px rgba(45,212,191,0.2)';
+    });
+    tag.addEventListener('mouseleave', () => {
+      tag.style.boxShadow = '';
+    });
+  });
+
+  // Metric cards — number count-up on scroll
+  const metricNums = document.querySelectorAll('.metric-num');
+  const metricObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const text = el.textContent;
+        const num = parseInt(text);
+        if (!isNaN(num)) {
+          el.textContent = '0' + text.replace(/[0-9]+/, '');
+          let current = 0;
+          const target = num;
+          const suffix = text.replace(/[0-9]+/, '');
+          const timer = setInterval(() => {
+            current += Math.ceil(target / 30);
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current + suffix;
+          }, 30);
+        }
+        metricObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  metricNums.forEach(el => metricObserver.observe(el));
+</script>
+</body>
+</html>
